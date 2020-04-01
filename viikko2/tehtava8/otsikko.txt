@@ -1,0 +1,1 @@
+8. git: epäajantasaisen kopion pushaaminen [versionhallinta]
