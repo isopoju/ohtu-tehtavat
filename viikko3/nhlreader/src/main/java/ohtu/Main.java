@@ -3,9 +3,9 @@ package ohtu;
 import com.google.gson.Gson;
 import java.io.IOException;
 import org.apache.http.client.fluent.Request;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 // The program lists the statistics of Finnish NHL players
 
@@ -24,6 +24,8 @@ public class Main {
         SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
         String strDate = formatter.format(new Date());  
         System.out.println("Players from FIN " + strDate + "\n");
+
+        Arrays.sort(players);
         
         for (Player player : players) {
             if (player.getNationality().equals("FIN")) {
