@@ -56,7 +56,7 @@ public class KauppaTest {
         kauppa.lisaaKoriin(1);
         kauppa.tilimaksu("pekka", "12345");
 
-        verify(pankki).tilisiirto("pekka", 42, "12345", "33333-44455", 5);
+        verify(pankki).tilisiirto(eq("pekka"), eq(42), eq("12345"), eq("33333-44455"), eq(5));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class KauppaTest {
         kauppa.lisaaKoriin(2);
         kauppa.tilimaksu("pekka", "12345");
 
-        verify(pankki).tilisiirto("pekka", 42, "12345", "33333-44455", 13);
+        verify(pankki).tilisiirto(eq("pekka"), eq(42), eq("12345"), eq("33333-44455"), eq(13));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class KauppaTest {
         kauppa.lisaaKoriin(1);
         kauppa.tilimaksu("pekka", "12345");
 
-        verify(pankki).tilisiirto("pekka", 42, "12345", "33333-44455", 10);
+        verify(pankki).tilisiirto(eq("pekka"), eq(42), eq("12345"), eq("33333-44455"), eq(10));
     }
 
     @Test
@@ -86,7 +86,47 @@ public class KauppaTest {
         kauppa.lisaaKoriin(3);     // loppu
         kauppa.tilimaksu("pekka", "12345");
 
-        verify(pankki).tilisiirto("pekka", 42, "12345", "33333-44455", 5);
+        verify(pankki).tilisiirto(eq("pekka"), eq(42), eq("12345"), eq("33333-44455"), eq(5));
     }
 
+    // tehtävä 4
+    
+    @Test
+    public void metodinAloitaAsiointiKutsuminenNollaaEdellisenOstoksenTiedot() {
+        kauppa.aloitaAsiointi();
+        kauppa.lisaaKoriin(1);
+        kauppa.lisaaKoriin(1);
+        
+        kauppa.aloitaAsiointi();
+        kauppa.lisaaKoriin(2);
+        kauppa.tilimaksu("pekka", "12345");
+
+        verify(pankki).tilisiirto(eq("pekka"), eq(42), eq("12345"), eq("33333-44455"), eq(8));
+    }
+    
+    @Test
+    public void kauppaPyytaaUudenViitenumeronJokaiselleMaksutapahtumalle() {
+        kauppa.aloitaAsiointi();
+        kauppa.lisaaKoriin(1);
+        kauppa.tilimaksu("pekka", "12345");
+
+        verify(viite, times(1)).uusi();
+
+        kauppa.aloitaAsiointi();
+        kauppa.lisaaKoriin(2);
+        kauppa.tilimaksu("pekka", "12345");
+
+        verify(viite, times(2)).uusi();
+    }
+    
+    @Test
+    public void kahdenEriTuoteenJoistaToinenPoistetaanOstoksenPaaytyttyaPankinMetodiaTilisiirtoKutsutaanOikeillaParametreilla() {
+        kauppa.aloitaAsiointi();
+        kauppa.lisaaKoriin(1);
+        kauppa.poistaKorista(1);
+        kauppa.lisaaKoriin(2);
+        kauppa.tilimaksu("pekka", "12345");
+
+        verify(pankki).tilisiirto(eq("pekka"), eq(42), eq("12345"), eq("33333-44455"), eq(8));
+    }
 }
