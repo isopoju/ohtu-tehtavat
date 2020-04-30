@@ -6,133 +6,106 @@ public class Sovellus {
 
     private static IntJoukko A, B, C;
 
-    private static String luku() {
-        Scanner lukija = new Scanner(System.in);
-        String luettu = lukija.nextLine();
-        return luettu;
+    private static int lueLuku(String teksti, Scanner lukija) {
+        System.out.print(teksti);
+        return lukija.nextInt();
     }
-
-    private static IntJoukko mikaJoukko() {
-        String luettu;
-        Scanner lukija = new Scanner(System.in);
-        luettu = luku();
+    
+    private static IntJoukko lueJoukko(String teksti, Scanner lukija) {
+        System.out.print(teksti);
+        
         while (true) {
-            if (luettu.equals("A") || luettu.equals("a")) {
+            String luettu = lukija.nextLine();
+            if (luettu.equalsIgnoreCase("A")) {
                 return A;
-            } else if (luettu.equals("B") || luettu.equals("b")) {
+            } else if (luettu.equalsIgnoreCase("B")) {
                 return B;
-            } else if (luettu.equals("C") || luettu.equals("c")) {
+            } else if (luettu.equalsIgnoreCase("C")) {
                 return C;
             } else {
                 System.out.println("Virheellinen joukko! " + luettu);
-                System.out.print("Yritä uudelleen!");
-                luettu = luku();
+                System.out.println("Yritä uudelleen!");
             }
         }
     }
 
-    private static void lisaa() {
-        int lisLuku;
+    private static void lisaa(Scanner lukija) {
         IntJoukko joukko;
-        Scanner lukija = new Scanner(System.in);
-        System.out.print("Mihin joukkoon? ");
-        joukko = mikaJoukko();
-        System.out.println("");
-        System.out.print("Mikä luku lisätään? ");
-        lisLuku = lukija.nextInt();
-        joukko.lisaa(lisLuku);
-        return;
-
+        int luku;
+        
+        joukko = lueJoukko("Mihin joukkoon? ", lukija);
+        luku = lueLuku("Mikä luku lisätään? ", lukija);
+        joukko.lisaa(luku);
     }
-
-    private static void yhdiste() {
-        IntJoukko aJoukko, bJoukko, c;
-        System.out.print("1. joukko? ");
-        aJoukko = mikaJoukko();
-        System.out.print("2. joukko? ");
-        bJoukko = mikaJoukko();
-        c = IntJoukko.yhdiste(aJoukko, bJoukko);
-        System.out.println("A yhdiste B = " + c.toString());
-        return;
-    }
-
-    private static void leikkaus() {
-        IntJoukko aJoukko, bJoukko, c;
-        System.out.print("1. joukko? ");
-        aJoukko = mikaJoukko();
-        System.out.print("2. joukko? ");
-        bJoukko = mikaJoukko();
-        c = IntJoukko.leikkaus(aJoukko, bJoukko);
-        System.out.println("A leikkaus B = " + c.toString());
-        return;
-    }
-
-    private static void erotus() {
-        IntJoukko aJoukko, bJoukko, c;
-        System.out.print("1. joukko? ");
-        aJoukko = mikaJoukko();
-        System.out.print("2. joukko? ");
-        bJoukko = mikaJoukko();
-        c = IntJoukko.erotus(aJoukko, bJoukko);
-        System.out.println("A erotus B = " + c.toString());
-        return;
-    }
-
-    private static void poista() {
-        IntJoukko joukko;
-        int lisLuku;
-        Scanner lukija = new Scanner(System.in);
-        System.out.print("Mistä joukosta? ");
-        joukko = mikaJoukko();
-        System.out.print("Mikä luku poistetaan? ");
-        lisLuku = lukija.nextInt();
-        joukko.poista(lisLuku);
-        return;
-    }
-
-    private static void kuuluu() {
-        IntJoukko joukko;
-        int kysLuku;
-        Scanner lukija = new Scanner(System.in);
-        System.out.print("Mihin joukkoon? ");
-        joukko = mikaJoukko();
-        System.out.print("Mikä luku? ");
-        kysLuku = lukija.nextInt();
-        boolean kuuluuko = joukko.kuuluu(kysLuku);
-        if (kuuluuko) {
-            System.out.println(kysLuku + " kuuluu joukkoon ");
-        } else {
-            System.out.println(kysLuku + " ei kuulu joukkoon ");
+    
+    private static void operaatio(String operaatio, Scanner lukija) {
+        IntJoukko eka, toka, tulos;
+        
+        eka = lueJoukko("1. joukko? ", lukija);
+        toka = lueJoukko("2. joukko? ", lukija);
+        
+        switch (operaatio) {
+            case "yhdiste":
+                tulos = IntJoukko.yhdiste(eka, toka);
+                break;
+            case "leikkaus":
+                tulos = IntJoukko.leikkaus(eka, toka);
+                break;
+            default:
+                tulos = IntJoukko.erotus(eka, toka);
+                break;
         }
-        return;
+        System.out.println("A " + operaatio + " B = " + tulos.toString());
+    }
+   
+    private static void poista(Scanner lukija) {
+        IntJoukko joukko;
+        int luku;
+        
+        joukko = lueJoukko("Mistä joukosta? ", lukija);
+        luku = lueLuku("Mikä luku poistetaan? ", lukija);
+        joukko.poista(luku);
     }
 
-    public static void main(String[] args) {
-        A = new IntJoukko();
-        B = new IntJoukko();
-        C = new IntJoukko();
-        String luettu;
+    private static void kuuluu(Scanner lukija) {
+        IntJoukko joukko;
+        int luku;
 
+        joukko = lueJoukko("Mihin joukkoon? ", lukija);
+        luku = lueLuku("Mikä luku? ", lukija);
+        
+        boolean kuuluuko = joukko.kuuluu(luku);
+        if (kuuluuko) {
+            System.out.println(luku + " kuuluu joukkoon ");
+        } else {
+            System.out.println(luku + " ei kuulu joukkoon ");
+        }
+    }
+    
+    private static void tulostaOhjeet() {
         System.out.println("Tervetuloa joukkolaboratorioon!");
         System.out.println("Käytössäsi ovat joukot A, B ja C.");
         System.out.println("Komennot ovat lisää(li), poista(p), kuuluu(k), yhdiste(y), erotus(e), leikkaus(le) ja lopetus(quit)(q).");
         System.out.println("Joukon nimi komentona tarkoittaa pyyntöä tulostaa joukko.");
-
-        Scanner lukija = new Scanner(System.in);
+    }
+    
+    private static void tekstikayttoliittyma(Scanner lukija) {
+        String luettu;
+        
         while (true) {
             luettu = lukija.nextLine();
             if (luettu.equals("lisää") || luettu.equals("li")) {
-                lisaa();
+                lisaa(lukija);
             } else if (luettu.equalsIgnoreCase("poista") || luettu.equalsIgnoreCase("p")) {
-                poista();
+                poista(lukija);
             } else if (luettu.equalsIgnoreCase("kuuluu") || luettu.equalsIgnoreCase("k")) {
-                kuuluu();
+                kuuluu(lukija);
             } else if (luettu.equalsIgnoreCase("yhdiste") || luettu.equalsIgnoreCase("y")) {
-                yhdiste();
+                operaatio("yhdiste", lukija);
             } else if (luettu.equalsIgnoreCase("leikkaus") || luettu.equalsIgnoreCase("le")) {
-                leikkaus();
+                operaatio("leikkaus", lukija);
             } else if (luettu.equalsIgnoreCase("erotus") || luettu.equalsIgnoreCase("e")) {
-                erotus();
+                operaatio("erotus", lukija);
             } else if (luettu.equalsIgnoreCase("A")) {
                 System.out.println(A);
             } else if (luettu.equalsIgnoreCase("B")) {
@@ -144,9 +117,18 @@ public class Sovellus {
                 break;
             } else {
                 System.out.println("Virheellinen komento! " + luettu);
-                System.out.println("Komennot ovat lisää(li), poista(p), kuuluu(k), yhdiste(y), erotus(e) ja leikkaus(le).");
             }
             System.out.println("Komennot ovat lisää(li), poista(p), kuuluu(k), yhdiste(y), erotus(e) ja leikkaus(le).");
         }
+    }
+
+    public static void main(String[] args) {
+        A = new IntJoukko();
+        B = new IntJoukko();
+        C = new IntJoukko();
+        Scanner lukija = new Scanner(System.in);
+        
+        tulostaOhjeet();
+        tekstikayttoliittyma(lukija);
     }
 }
